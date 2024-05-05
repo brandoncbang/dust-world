@@ -24,10 +24,10 @@ export class Game {
   }
 
   start() {
-    this.tick();
+    this.update();
   }
 
-  tick() {
+  update() {
     if (Input.mousePressed) {
       this.simulation.drawLine(
         this.lastMouseX,
@@ -51,7 +51,7 @@ export class Game {
     this.lastMouseX = Input.mouseX;
     this.lastMouseY = Input.mouseY;
 
-    window.requestAnimationFrame(this.tick.bind(this));
+    window.requestAnimationFrame(() => this.update());
   }
 
   render() {
