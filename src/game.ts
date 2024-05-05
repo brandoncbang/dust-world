@@ -13,7 +13,8 @@ export class Game {
   public lastMouseX: number = Input.mouseX;
   public lastMouseY: number = Input.mouseY;
 
-  public brushSize: number = 5.0;
+  public brushSize: number = 7.0;
+  public brushMaterial: Material = Material.Sand;
 
   constructor(public canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext("2d")!;
@@ -36,7 +37,7 @@ export class Game {
         Input.mouseY,
         this.brushSize,
         {
-          material: Material.Water,
+          material: this.brushMaterial,
           register0: 0,
           register1: 0,
           clock: 0,
@@ -58,10 +59,10 @@ export class Game {
     this.simulation.renderTo(this.renderBuffer);
 
     this.renderBuffer.drawSquare(
-      Input.mouseX - Math.floor((this.brushSize + 1) / 2),
-      Input.mouseY - Math.floor((this.brushSize + 1) / 2),
-      this.brushSize + 1,
-      this.brushSize + 1,
+      Input.mouseX - Math.ceil(this.brushSize / 2),
+      Input.mouseY - Math.ceil(this.brushSize / 2),
+      this.brushSize,
+      this.brushSize,
       {
         r: 255,
         g: 255,

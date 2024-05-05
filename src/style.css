@@ -17,5 +17,6 @@ body {
   margin: 0 auto;
   border: 1px solid white;
 
+  cursor: none;
   image-rendering: pixelated;
 }
