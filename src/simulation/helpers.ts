@@ -1,3 +1,14 @@
+const VALID_DIRECTIONS: [x: number, y: number][] = [
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, -1],
+  [0, 1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+];
+
 export function randomInt(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -5,17 +16,10 @@ export function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export function randomDirection(): [x: number, y: number] {
-  const validDirections: [x: number, y: number][] = [
-    [-1, -1],
-    [-1, 0],
-    [-1, 1],
-    [0, -1],
-    [0, 1],
-    [1, -1],
-    [1, 0],
-    [1, 1],
-  ];
+export function sample<T>(arr: T[]): T {
+  return arr[randomInt(0, arr.length)];
+}
 
-  return validDirections[randomInt(0, validDirections.length)];
+export function randomDirection(): [x: number, y: number] {
+  return sample(VALID_DIRECTIONS);
 }

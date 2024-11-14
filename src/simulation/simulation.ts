@@ -1,13 +1,13 @@
-import { EmptyParticle, Particle } from "./particle.ts";
+import { EMPTY_PARTICLE, Particle, updateParticle } from "./particle.ts";
 import { Material } from "./material.ts";
-import { randomDirection } from "./helpers.ts";
 import { RenderBuffer } from "../core/render.ts";
+import { randomInt } from "./helpers.ts";
 
 export class ParticleView {
   constructor(
     private readonly simulation: Simulation,
-    private x: number,
-    private y: number,
+    private x: number = 0,
+    private y: number = 0,
   ) {}
 
   public getParticle(dx: number, dy: number): Particle {
@@ -25,11 +25,13 @@ export class ParticleView {
 }
 
 export class Simulation {
-  public static readonly particleBytes = 4;
+  public static readonly particleBytes = Object.entries(EMPTY_PARTICLE).length;
 
   private generation: number = 0;
 
   private readonly particles: Uint8ClampedArray;
+
+  private readonly particleView: ParticleView = new ParticleView(this);
 
   constructor(
     public readonly width: number,
@@ -40,34 +42,24 @@ export class Simulation {
     );
   }
 
+  get clock() {
+    return this.generation % 2;
+  }
+
   public tick() {
-    this.generation = (this.generation + 1) % 2;
+    this.generation = (this.generation + 1) % 1000;
 
     for (let x = 0; x < this.width; x++) {
-      const scanX = this.generation === 0 ? this.width - (1 + x) : x;
+      const scanX = this.clock === 0 ? this.width - (1 + x) : x;
 
       for (let y = 0; y < this.height; y++) {
         const particle = this.getParticle(scanX, y);
 
-        if (particle.clock === this.generation) continue;
+        if (particle.clock === this.clock) continue;
 
-        const [randomX] = randomDirection();
+        this.particleView.setOrigin(scanX, y);
 
-        switch (particle.material) {
-          case Material.Sand:
-            if (this.getParticle(scanX, y + 1).material === Material.Empty) {
-              this.setParticle(scanX, y, EmptyParticle);
-              this.setParticle(scanX, y + 1, particle);
-            } else if (
-              this.getParticle(scanX + randomX, y + 1).material ===
-              Material.Empty
-            ) {
-              this.setParticle(scanX, y, EmptyParticle);
-              this.setParticle(scanX + randomX, y + 1, particle);
-            }
-
-            break;
-        }
+        updateParticle(this.particleView, particle);
       }
     }
   }
@@ -76,8 +68,8 @@ export class Simulation {
     if (!this.containsPosition(x, y)) {
       return {
         material: Material.Brick,
-        register0: 0,
-        register1: 0,
+        seed: 0,
+        life: 0,
         clock: 0,
       };
     }
@@ -86,8 +78,8 @@ export class Simulation {
 
     return {
       material: this.particles[index],
-      register0: this.particles[index + 1],
-      register1: this.particles[index + 2],
+      seed: this.particles[index + 1],
+      life: this.particles[index + 2],
       clock: this.particles[index + 3],
     };
   }
@@ -100,9 +92,9 @@ export class Simulation {
     const index = this.toIndex(x, y);
 
     this.particles[index] = particle.material;
-    this.particles[index + 1] = particle.register0;
-    this.particles[index + 2] = particle.register1;
-    this.particles[index + 3] = this.generation;
+    this.particles[index + 1] = particle.seed;
+    this.particles[index + 2] = particle.life;
+    this.particles[index + 3] = this.clock;
   }
 
   public draw(x: number, y: number, size: number, particle: Particle) {
@@ -110,7 +102,11 @@ export class Simulation {
 
     for (let px = x - halfSize; px <= x + halfSize; px++) {
       for (let py = y - halfSize; py <= y + halfSize; py++) {
-        this.setParticle(px, py, particle);
+        this.setParticle(
+          px,
+          py,
+          Object.assign(particle, { seed: randomInt(0, 256) }),
+        );
       }
     }
   }
@@ -163,11 +159,23 @@ export class Simulation {
         };
 
         if (particle.material === Material.Sand) {
-          color = {
-            r: 240,
-            g: 230,
-            b: 140,
-          };
+          color = [
+            {
+              r: 239,
+              g: 203,
+              b: 154,
+            },
+            {
+              r: 240,
+              g: 230,
+              b: 140,
+            },
+            {
+              r: 245,
+              g: 245,
+              b: 220,
+            },
+          ][particle.seed % 3];
         }
         if (particle.material === Material.Water) {
           color = {

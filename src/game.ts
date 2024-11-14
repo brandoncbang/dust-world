@@ -2,6 +2,7 @@ import { Simulation } from "./simulation/simulation.ts";
 import { Material } from "./simulation/material.ts";
 import { Input } from "./core/input.ts";
 import { RenderBuffer } from "./core/render.ts";
+import { createParticle } from "./simulation/particle.ts";
 
 export class Game {
   public ctx: CanvasRenderingContext2D;
@@ -14,7 +15,7 @@ export class Game {
   public lastMouseY: number = Input.mouseY;
 
   public brushSize: number = 7.0;
-  public brushMaterial: Material = Material.Sand;
+  public brushMaterial: Material = Material.Water;
 
   constructor(public canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext("2d")!;
@@ -36,12 +37,9 @@ export class Game {
         Input.mouseX,
         Input.mouseY,
         this.brushSize,
-        {
+        createParticle({
           material: this.brushMaterial,
-          register0: 0,
-          register1: 0,
-          clock: 0,
-        },
+        }),
       );
     }
 
