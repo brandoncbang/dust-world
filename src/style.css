@@ -1,9 +1,6 @@
 :root {
   font-family: sans-serif;
   font-size: 16px;
-
-  color: white;
-  background-color: black;
 }
 
 body {
@@ -15,7 +12,7 @@ body {
   display: block;
   width: 1200px;
   margin: 0 auto;
-  border: 1px solid white;
+  border: 1px solid black;
 
   cursor: none;
   image-rendering: pixelated;

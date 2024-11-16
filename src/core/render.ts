@@ -1,8 +1,4 @@
-export type Color = {
-  r: number;
-  g: number;
-  b: number;
-};
+import { Color } from "./color.ts";
 
 export class RenderBuffer {
   public imageData: ImageData;
