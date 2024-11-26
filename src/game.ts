@@ -3,11 +3,10 @@ import { Material } from "./simulation/material.ts";
 import { Input } from "./core/input.ts";
 import { RenderBuffer } from "./core/render.ts";
 import { createParticle } from "./simulation/particle.ts";
+import { Gui } from "./core/gui.ts";
 
 export class Game {
   public ctx: CanvasRenderingContext2D;
-
-  public renderBuffer: RenderBuffer;
 
   public simulation: Simulation;
 
@@ -17,10 +16,21 @@ export class Game {
   public brushSize: number = 7.0;
   public brushMaterial: Material = Material.Water;
 
-  constructor(public canvas: HTMLCanvasElement) {
-    this.ctx = canvas.getContext("2d")!;
+  private renderBuffer: RenderBuffer;
+  private gui: Gui;
 
+  constructor(
+    public canvas: HTMLCanvasElement,
+    public guiRoot: HTMLElement,
+  ) {
+    this.ctx = canvas.getContext("2d")!;
     this.renderBuffer = new RenderBuffer(this.ctx);
+
+    this.gui = new Gui(guiRoot);
+
+    this.gui.onMaterialSelected((material: Material) => {
+      this.brushMaterial = material;
+    });
 
     this.simulation = new Simulation(canvas.width, canvas.height);
   }

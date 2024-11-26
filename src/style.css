@@ -12,8 +12,28 @@ body {
   display: block;
   width: 1200px;
   margin: 0 auto;
-  border: 1px solid black;
-
   cursor: none;
   image-rendering: pixelated;
+}
+
+#gui {
+  display: flex;
+  gap: 0.5rem;
+  width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+#gui button {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid black;
+  font-family: monospace;
+  font-size: 16px;
+  background: white;
+  cursor: pointer;
+
+  &.selected {
+    background: black;
+    color: white;
+  }
 }
