@@ -93,6 +93,12 @@ export function getParticleColor(particle: Particle): Color {
   switch (particle.material) {
     case Material.Empty:
       return CORNFLOWERBLUE;
+    case Material.Fire:
+      return {
+        r: 255,
+        g: 165,
+        b: 0,
+      };
     case Material.Water:
       return {
         r: 0,
@@ -117,6 +123,18 @@ export function getParticleColor(particle: Particle): Color {
           b: 220,
         },
       ][particle.seed % 3];
+    case Material.Wood:
+      return {
+        r: 244,
+        g: 164,
+        b: 96,
+      };
+    case Material.Brick:
+      return {
+        r: 178,
+        g: 34,
+        b: 34,
+      };
   }
 
   return FUCSHIA;
