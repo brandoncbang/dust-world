@@ -9,3 +9,9 @@ export const CORNFLOWERBLUE: Color = {
   g: 149,
   b: 237,
 };
+
+export const FUCSHIA: Color = {
+  r: 255,
+  g: 0,
+  b: 255,
+};

@@ -1,6 +1,7 @@
 import { Material } from "./material.ts";
 import { randomDirection, randomInt } from "./helpers.ts";
 import { ParticleView } from "./simulation.ts";
+import { Color, CORNFLOWERBLUE, FUCSHIA } from "../core/color.ts";
 
 export type Particle = {
   material: Material;
@@ -40,6 +41,8 @@ export function updateParticle(neighbors: ParticleView, particle: Particle) {
     case Material.Water:
       updateLiquid(neighbors, particle);
       break;
+    default:
+      neighbors.setParticle(0, 0, particle);
   }
 }
 
@@ -84,4 +87,37 @@ function updateLiquid(neighbors: ParticleView, particle: Particle) {
     neighbors.setParticle(0, 0, EMPTY_PARTICLE);
     neighbors.setParticle(-randomX * 2, 0, particle);
   }
+}
+
+export function getParticleColor(particle: Particle): Color {
+  switch (particle.material) {
+    case Material.Empty:
+      return CORNFLOWERBLUE;
+    case Material.Water:
+      return {
+        r: 0,
+        g: 0,
+        b: 255,
+      };
+    case Material.Sand:
+      return [
+        {
+          r: 239,
+          g: 203,
+          b: 154,
+        },
+        {
+          r: 240,
+          g: 230,
+          b: 140,
+        },
+        {
+          r: 245,
+          g: 245,
+          b: 220,
+        },
+      ][particle.seed % 3];
+  }
+
+  return FUCSHIA;
 }

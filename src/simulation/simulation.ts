@@ -1,8 +1,12 @@
-import { EMPTY_PARTICLE, Particle, updateParticle } from "./particle.ts";
+import {
+  EMPTY_PARTICLE,
+  getParticleColor,
+  Particle,
+  updateParticle,
+} from "./particle.ts";
 import { Material } from "./material.ts";
 import { RenderBuffer } from "../core/render.ts";
 import { randomInt } from "./helpers.ts";
-import { CORNFLOWERBLUE } from "../core/color.ts";
 
 export class ParticleView {
   constructor(
@@ -152,35 +156,7 @@ export class Simulation {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const particle = this.getParticle(x, y);
-
-        let color = CORNFLOWERBLUE;
-
-        if (particle.material === Material.Sand) {
-          color = [
-            {
-              r: 239,
-              g: 203,
-              b: 154,
-            },
-            {
-              r: 240,
-              g: 230,
-              b: 140,
-            },
-            {
-              r: 245,
-              g: 245,
-              b: 220,
-            },
-          ][particle.seed % 3];
-        }
-        if (particle.material === Material.Water) {
-          color = {
-            r: 0,
-            g: 0,
-            b: 255,
-          };
-        }
+        const color = getParticleColor(particle);
 
         renderBuffer.drawPixel(x, y, color);
       }
