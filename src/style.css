@@ -10,7 +10,7 @@ body {
 
 #game {
   display: block;
-  width: 1200px;
+  width: 900px;
   margin: 0 auto;
   cursor: none;
   image-rendering: pixelated;
@@ -19,7 +19,7 @@ body {
 #gui {
   display: flex;
   gap: 0.5rem;
-  width: 1200px;
+  width: 900px;
   margin: 0 auto;
   padding: 1rem 0;
 }
