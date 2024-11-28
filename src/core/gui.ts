@@ -1,4 +1,5 @@
 import { Material } from "../simulation/material";
+import { Game } from "../game.ts";
 
 function h(
   tag: keyof HTMLElementTagNameMap,
@@ -22,8 +23,12 @@ function h(
 export class Gui {
   private materialSelectedCallbacks: ((material: Material) => void)[] = [];
   private clearButtonPressedCallbacks: (() => void)[] = [];
+  private pauseButtonPressedCallbacks: (() => void)[] = [];
 
-  constructor(private root: HTMLElement) {
+  constructor(
+    private root: HTMLElement,
+    private game: Game,
+  ) {
     this.render();
   }
 
@@ -33,6 +38,11 @@ export class Gui {
 
   public onClearButtonPressed(callback: () => void) {
     this.clearButtonPressedCallbacks.push(callback);
+  }
+
+  // TODO: This is getting pretty messy. Maybe use an event system or something?
+  public onPauseButtonPressed(callback: () => void) {
+    this.pauseButtonPressedCallbacks.push(callback);
   }
 
   private render() {
@@ -50,7 +60,17 @@ export class Gui {
             });
           },
         }),
-        h("button", "Pause"),
+        h("button", "Pause", {
+          onclick: (e: Event) => {
+            this.pauseButtonPressedCallbacks.forEach((callback) => {
+              callback();
+            });
+
+            (e.target as HTMLButtonElement).textContent = this.game.paused
+              ? "Unpause"
+              : "Pause";
+          },
+        }),
       ),
       h("h2", "Materials"),
       h(

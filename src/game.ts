@@ -7,6 +7,8 @@ import { Gui } from "./core/gui.ts";
 import { WHITE } from "./core/color.ts";
 
 export class Game {
+  public paused: boolean = false;
+
   private readonly ctx: CanvasRenderingContext2D;
 
   private simulation: Simulation;
@@ -26,7 +28,7 @@ export class Game {
     this.ctx = canvas.getContext("2d")!;
     this.renderBuffer = new RenderBuffer(this.ctx);
 
-    this.gui = new Gui(guiRoot);
+    this.gui = new Gui(guiRoot, this);
     this.setUpGui();
 
     this.simulation = new Simulation(canvas.width, canvas.height);
@@ -39,6 +41,10 @@ export class Game {
 
     this.gui.onClearButtonPressed(() => {
       this.simulation.clear();
+    });
+
+    this.gui.onPauseButtonPressed(() => {
+      this.paused = !this.paused;
     });
   }
 
@@ -60,7 +66,9 @@ export class Game {
       );
     }
 
-    this.simulation.tick();
+    if (!this.paused) {
+      this.simulation.tick();
+    }
 
     this.render();
 
