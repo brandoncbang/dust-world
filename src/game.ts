@@ -4,6 +4,7 @@ import { Input } from "./core/input.ts";
 import { RenderBuffer } from "./core/render.ts";
 import { createParticle } from "./simulation/particle.ts";
 import { Gui } from "./core/gui.ts";
+import { WHITE } from "./core/color.ts";
 
 export class Game {
   public ctx: CanvasRenderingContext2D;
@@ -13,7 +14,7 @@ export class Game {
   public lastMouseX: number = Input.mouseX;
   public lastMouseY: number = Input.mouseY;
 
-  public brushSize: number = 7.0;
+  public brushSize: number = 5.0;
   public brushMaterial: Material = Material.Water;
 
   private renderBuffer: RenderBuffer;
@@ -67,15 +68,11 @@ export class Game {
     this.simulation.renderTo(this.renderBuffer);
 
     this.renderBuffer.drawSquare(
-      Input.mouseX - Math.ceil(this.brushSize / 2),
-      Input.mouseY - Math.ceil(this.brushSize / 2),
-      this.brushSize,
-      this.brushSize,
-      {
-        r: 255,
-        g: 255,
-        b: 255,
-      },
+      Input.mouseX - Math.floor(this.brushSize / 2.0),
+      Input.mouseY - Math.floor(this.brushSize / 2.0),
+      this.brushSize - 1,
+      this.brushSize - 1,
+      WHITE,
     );
 
     this.ctx.putImageData(this.renderBuffer.imageData, 0, 0);
