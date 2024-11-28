@@ -21,6 +21,7 @@ function h(
 
 export class Gui {
   private materialSelectedCallbacks: ((material: Material) => void)[] = [];
+  private clearButtonPressedCallbacks: (() => void)[] = [];
 
   constructor(private root: HTMLElement) {
     this.render();
@@ -30,13 +31,27 @@ export class Gui {
     this.materialSelectedCallbacks.push(callback);
   }
 
+  public onClearButtonPressed(callback: () => void) {
+    this.clearButtonPressedCallbacks.push(callback);
+  }
+
   private render() {
     const materialEntries = Object.entries(Material).filter(([key]) =>
       isNaN(Number(key)),
     );
 
     this.root.append(
-      h("div", h("button", "Clear"), h("button", "Pause")),
+      h(
+        "div",
+        h("button", "Clear", {
+          onclick: () => {
+            this.clearButtonPressedCallbacks.forEach((callback) => {
+              callback();
+            });
+          },
+        }),
+        h("button", "Pause"),
+      ),
       h("h2", "Materials"),
       h(
         "div",

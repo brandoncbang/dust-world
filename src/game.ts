@@ -27,12 +27,19 @@ export class Game {
     this.renderBuffer = new RenderBuffer(this.ctx);
 
     this.gui = new Gui(guiRoot);
+    this.setUpGui();
 
+    this.simulation = new Simulation(canvas.width, canvas.height);
+  }
+
+  setUpGui() {
     this.gui.onMaterialSelected((material: Material) => {
       this.brushMaterial = material;
     });
 
-    this.simulation = new Simulation(canvas.width, canvas.height);
+    this.gui.onClearButtonPressed(() => {
+      this.simulation.clear();
+    });
   }
 
   start() {

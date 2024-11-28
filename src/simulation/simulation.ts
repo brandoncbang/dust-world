@@ -34,7 +34,7 @@ export class Simulation {
 
   private generation: number = 0;
 
-  private readonly particles: Uint8ClampedArray;
+  private particles: Uint8ClampedArray;
 
   private readonly particleView: ParticleView = new ParticleView(this);
 
@@ -146,6 +146,12 @@ export class Simulation {
 
       this.draw(fromX, fromY, size, particle);
     }
+  }
+
+  public clear() {
+    this.particles = new Uint8ClampedArray(
+      this.width * this.height * Simulation.particleBytes,
+    );
   }
 
   public renderTo(renderBuffer: RenderBuffer) {
