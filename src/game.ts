@@ -7,18 +7,17 @@ import { Gui } from "./core/gui.ts";
 import { WHITE } from "./core/color.ts";
 
 export class Game {
-  public ctx: CanvasRenderingContext2D;
+  private readonly ctx: CanvasRenderingContext2D;
 
-  public simulation: Simulation;
-
-  public lastMouseX: number = Input.mouseX;
-  public lastMouseY: number = Input.mouseY;
-
-  public brushSize: number = 5.0;
-  public brushMaterial: Material = Material.Water;
-
-  private renderBuffer: RenderBuffer;
+  private simulation: Simulation;
+  private readonly renderBuffer: RenderBuffer;
   private gui: Gui;
+
+  private lastMouseX: number = Input.mouseX;
+  private lastMouseY: number = Input.mouseY;
+
+  private brushSize: number = 5.0;
+  private brushMaterial: Material = Material.Water;
 
   constructor(
     public canvas: HTMLCanvasElement,
