@@ -52,8 +52,12 @@ function updatePowder(neighbors: ParticleView, particle: Particle) {
   if (neighbors.getParticle(0, 1).material === Material.Empty) {
     neighbors.setParticle(0, 0, EMPTY_PARTICLE);
     neighbors.setParticle(0, 1, particle);
-  } else if (neighbors.getParticle(randomX, 1).material === Material.Empty) {
-    neighbors.setParticle(0, 0, EMPTY_PARTICLE);
+  } else if (
+    [Material.Empty, Material.Water].includes(
+      neighbors.getParticle(randomX, 1).material,
+    )
+  ) {
+    neighbors.setParticle(0, 0, neighbors.getParticle(randomX, 1));
     neighbors.setParticle(randomX, 1, particle);
   }
 }
