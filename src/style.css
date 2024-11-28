@@ -17,11 +17,23 @@ body {
 }
 
 #gui {
-  display: flex;
-  gap: 0.5rem;
+  display: grid;
+  gap: 1rem;
   width: 900px;
   margin: 0 auto;
   padding: 1rem 0;
+}
+
+#gui h2 {
+  margin: 1rem 0 0.25rem;
+  font-family: monospace;
+  font-size: 24px;
+}
+
+#gui :has(> button + button) {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 #gui button {

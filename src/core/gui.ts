@@ -1,5 +1,24 @@
 import { Material } from "../simulation/material";
 
+function h(
+  tag: keyof HTMLElementTagNameMap,
+  ...args: (string | HTMLElement | object)[]
+): HTMLElement {
+  const el = document.createElement(tag);
+
+  for (const arg of args) {
+    if (typeof arg === "string") {
+      el.textContent += arg;
+    } else if (arg instanceof HTMLElement) {
+      el.appendChild(arg);
+    } else if (typeof arg === "object" && !Array.isArray(arg) && arg !== null) {
+      Object.assign(el, arg);
+    }
+  }
+
+  return el;
+}
+
 export class Gui {
   private materialSelectedCallbacks: ((material: Material) => void)[] = [];
 
@@ -16,23 +35,31 @@ export class Gui {
       isNaN(Number(key)),
     );
 
-    for (const [key, material] of materialEntries) {
-      const button = document.createElement("button");
-      button.textContent = key;
-      button.className = material === Material.Water ? "selected" : "";
-      button.onclick = () => {
-        this.materialSelectedCallbacks.forEach((callback) =>
-          callback(material as Material),
-        );
+    this.root.append(
+      h("div", h("button", "Clear"), h("button", "Pause")),
+      h("h2", "Materials"),
+      h(
+        "div",
+        ...materialEntries.map(([key, material]) =>
+          h("button", {
+            className: material === Material.Water && "selected",
+            textContent: key,
+            onclick: (e: Event) => {
+              const el = e.target as HTMLButtonElement;
 
-        this.root.querySelectorAll("button").forEach((button) => {
-          button.classList.remove("selected");
-        });
+              this.materialSelectedCallbacks.forEach((callback) =>
+                callback(material as Material),
+              );
 
-        button.classList.add("selected");
-      };
+              el.parentElement?.querySelectorAll("button").forEach((button) => {
+                button.classList.remove("selected");
+              });
 
-      this.root.appendChild(button);
-    }
+              el.classList.add("selected");
+            },
+          }),
+        ),
+      ),
+    );
   }
 }
