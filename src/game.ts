@@ -35,17 +35,21 @@ export class Game {
   }
 
   setUpGui() {
-    this.gui.onMaterialSelected((material: Material) => {
+    this.gui.onBrushSizeSelected = (size: number) => {
+      this.brushSize = size;
+    };
+
+    this.gui.onMaterialSelected = (material: Material) => {
       this.brushMaterial = material;
-    });
+    };
 
-    this.gui.onClearButtonPressed(() => {
+    this.gui.onClearButtonPressed = () => {
       this.simulation.clear();
-    });
+    };
 
-    this.gui.onPauseButtonPressed(() => {
+    this.gui.onPauseButtonPressed = () => {
       this.paused = !this.paused;
-    });
+    };
   }
 
   start() {

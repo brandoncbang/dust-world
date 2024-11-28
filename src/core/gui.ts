@@ -21,10 +21,6 @@ function h(
 }
 
 export class Gui {
-  private materialSelectedCallbacks: ((material: Material) => void)[] = [];
-  private clearButtonPressedCallbacks: (() => void)[] = [];
-  private pauseButtonPressedCallbacks: (() => void)[] = [];
-
   constructor(
     private root: HTMLElement,
     private game: Game,
@@ -32,18 +28,13 @@ export class Gui {
     this.render();
   }
 
-  public onMaterialSelected(callback: (material: Material) => void) {
-    this.materialSelectedCallbacks.push(callback);
-  }
+  public onBrushSizeSelected: (size: number) => void = () => {};
 
-  public onClearButtonPressed(callback: () => void) {
-    this.clearButtonPressedCallbacks.push(callback);
-  }
+  public onMaterialSelected: (material: Material) => void = () => {};
 
-  // TODO: This is getting pretty messy. Maybe use an event system or something?
-  public onPauseButtonPressed(callback: () => void) {
-    this.pauseButtonPressedCallbacks.push(callback);
-  }
+  public onClearButtonPressed: () => void = () => {};
+
+  public onPauseButtonPressed: () => void = () => {};
 
   private render() {
     const materialEntries = Object.entries(Material).filter(([key]) =>
@@ -55,22 +46,36 @@ export class Gui {
         "div",
         h("button", "Clear", {
           onclick: () => {
-            this.clearButtonPressedCallbacks.forEach((callback) => {
-              callback();
-            });
+            this.onClearButtonPressed();
           },
         }),
         h("button", "Pause", {
           onclick: (e: Event) => {
-            this.pauseButtonPressedCallbacks.forEach((callback) => {
-              callback();
-            });
+            this.onPauseButtonPressed();
 
             (e.target as HTMLButtonElement).textContent = this.game.paused
-              ? "Unpause"
+              ? "Start"
               : "Pause";
           },
         }),
+        h(
+          "div",
+          { style: "margin-left: auto" },
+          h("input", {
+            id: "brush-size",
+            type: "range",
+            min: 1.0,
+            max: 9.0,
+            step: 2.0,
+            value: 5.0,
+            onchange: (e: Event) => {
+              this.onBrushSizeSelected(
+                (e.target as HTMLInputElement).valueAsNumber,
+              );
+            },
+          }),
+          h("label", { for: "brush-size", className: "sr-only" }, "Brush size"),
+        ),
       ),
       h("h2", "Materials"),
       h(
@@ -80,11 +85,9 @@ export class Gui {
             className: material === Material.Water && "selected",
             textContent: key,
             onclick: (e: Event) => {
-              const el = e.target as HTMLButtonElement;
+              this.onMaterialSelected(material as Material);
 
-              this.materialSelectedCallbacks.forEach((callback) =>
-                callback(material as Material),
-              );
+              const el = e.target as HTMLButtonElement;
 
               el.parentElement?.querySelectorAll("button").forEach((button) => {
                 button.classList.remove("selected");
