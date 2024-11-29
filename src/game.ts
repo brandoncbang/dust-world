@@ -13,7 +13,6 @@ export class Game {
 
   private simulation: Simulation;
   private readonly renderBuffer: RenderBuffer;
-  private gui: Gui;
 
   private lastMouseX: number = Input.mouseX;
   private lastMouseY: number = Input.mouseY;
@@ -21,33 +20,27 @@ export class Game {
   private brushSize: number = 5.0;
   private brushMaterial: Material = Material.Water;
 
-  constructor(
-    public canvas: HTMLCanvasElement,
-    public guiRoot: HTMLElement,
-  ) {
+  constructor(public canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext("2d")!;
     this.renderBuffer = new RenderBuffer(this.ctx);
-
-    this.gui = new Gui(guiRoot, this);
-    this.setUpGui();
 
     this.simulation = new Simulation(canvas.width, canvas.height);
   }
 
-  setUpGui() {
-    this.gui.onBrushSizeSelected = (size: number) => {
+  setUpGui(gui: Gui) {
+    gui.onBrushSizeSelected = (size: number) => {
       this.brushSize = size;
     };
 
-    this.gui.onMaterialSelected = (material: Material) => {
+    gui.onMaterialSelected = (material: Material) => {
       this.brushMaterial = material;
     };
 
-    this.gui.onClearButtonPressed = () => {
+    gui.onClearButtonPressed = () => {
       this.simulation.clear();
     };
 
-    this.gui.onPauseButtonPressed = () => {
+    gui.onPauseButtonPressed = () => {
       this.paused = !this.paused;
     };
   }
