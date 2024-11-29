@@ -41,8 +41,6 @@ export function updateParticle(neighbors: ParticleView, particle: Particle) {
     case Material.Water:
       updateLiquid(neighbors, particle);
       break;
-    default:
-      neighbors.setParticle(0, 0, particle);
   }
 }
 
