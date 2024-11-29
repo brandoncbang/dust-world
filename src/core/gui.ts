@@ -1,5 +1,4 @@
 import { Material } from "../simulation/material";
-import { Game } from "../game.ts";
 
 function h(
   tag: keyof HTMLElementTagNameMap,
@@ -21,10 +20,7 @@ function h(
 }
 
 export class Gui {
-  constructor(
-    private root: HTMLElement,
-    private game: Game,
-  ) {
+  constructor(private root: HTMLElement) {
     this.render();
   }
 
@@ -53,9 +49,9 @@ export class Gui {
           onclick: (e: Event) => {
             this.onPauseButtonPressed();
 
-            (e.target as HTMLButtonElement).textContent = this.game.paused
-              ? "Start"
-              : "Pause";
+            const el = e.target as HTMLButtonElement;
+
+            el.textContent = el.textContent === "Pause" ? "Start" : "Pause";
           },
         }),
         h(
