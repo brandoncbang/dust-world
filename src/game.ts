@@ -24,6 +24,7 @@ export class Game {
     this.ctx = canvas.getContext("2d")!;
     this.renderBuffer = new RenderBuffer(this.ctx);
 
+    this.renderBuffer = new RenderBuffer(canvas.width, canvas.height);
     this.simulation = new Simulation(canvas.width, canvas.height);
   }
 
@@ -76,7 +77,7 @@ export class Game {
   }
 
   render() {
-    this.simulation.renderTo(this.renderBuffer);
+    this.renderBuffer.drawSimulation(this.simulation);
 
     this.renderBuffer.drawSquare(
       Input.mouseX - Math.floor(this.brushSize / 2.0),
@@ -86,6 +87,6 @@ export class Game {
       WHITE,
     );
 
-    this.ctx.putImageData(this.renderBuffer.imageData, 0, 0);
+    this.renderBuffer.renderToContext2D(this.ctx);
   }
 }

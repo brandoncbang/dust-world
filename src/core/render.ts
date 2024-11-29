@@ -1,19 +1,27 @@
 import { Color } from "./color.ts";
+import { getParticleColor } from "../simulation/particle.ts";
+import { Simulation } from "../simulation/simulation.ts";
 
 export class RenderBuffer {
   public imageData: ImageData;
 
-  constructor(public ctx: CanvasRenderingContext2D) {
-    this.imageData = ctx.getImageData(
-      0,
-      0,
-      ctx.canvas.width,
-      ctx.canvas.height,
-    );
+  constructor(width: number, height: number) {
+    this.imageData = new ImageData(width, height);
   }
 
-  get data() {
-    return this.imageData.data;
+  public drawSimulation(simulation: Simulation) {
+    if (this.imageData.data.length !== simulation.size) {
+      throw new Error("Render buffer size mismatches simulation size.");
+    }
+
+    for (let x = 0; x < simulation.width; x++) {
+      for (let y = 0; y < simulation.height; y++) {
+        const particle = simulation.getParticle(x, y);
+        const color = getParticleColor(particle);
+
+        this.drawPixel(x, y, color);
+      }
+    }
   }
 
   public drawPixel(x: number, y: number, color: Color) {
@@ -76,5 +84,9 @@ export class RenderBuffer {
     this.drawLine(x, y, x, y + height, color);
     this.drawLine(x + width, y, x + width, y + height, color);
     this.drawLine(x, y + height, x + width, y + height, color);
+  }
+
+  renderToContext2D(ctx: CanvasRenderingContext2D) {
+    ctx.putImageData(this.imageData, 0, 0);
   }
 }

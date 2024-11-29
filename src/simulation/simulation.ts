@@ -1,11 +1,5 @@
-import {
-  EMPTY_PARTICLE,
-  getParticleColor,
-  Particle,
-  updateParticle,
-} from "./particle.ts";
+import { EMPTY_PARTICLE, Particle, updateParticle } from "./particle.ts";
 import { Material } from "./material.ts";
-import { RenderBuffer } from "../core/render.ts";
 import { randomInt } from "./helpers.ts";
 
 export class ParticleView {
@@ -45,6 +39,10 @@ export class Simulation {
     this.particles = new Uint8ClampedArray(
       width * height * Simulation.particleBytes,
     );
+  }
+
+  get size() {
+    return this.particles.length;
   }
 
   get clock() {
@@ -152,21 +150,6 @@ export class Simulation {
     this.particles = new Uint8ClampedArray(
       this.width * this.height * Simulation.particleBytes,
     );
-  }
-
-  public renderTo(renderBuffer: RenderBuffer) {
-    if (renderBuffer.data.length !== this.particles.length) {
-      throw new Error("Render buffer size mismatches simulation size.");
-    }
-
-    for (let x = 0; x < this.width; x++) {
-      for (let y = 0; y < this.height; y++) {
-        const particle = this.getParticle(x, y);
-        const color = getParticleColor(particle);
-
-        renderBuffer.drawPixel(x, y, color);
-      }
-    }
   }
 
   private containsPosition(x: number, y: number): boolean {
