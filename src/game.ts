@@ -21,8 +21,7 @@ export class Game {
   private brushMaterial: Material = Material.Water;
 
   constructor(public canvas: HTMLCanvasElement) {
-    this.ctx = canvas.getContext("2d")!;
-    this.renderBuffer = new RenderBuffer(this.ctx);
+    this.ctx = canvas.getContext("2d", { alpha: false })!;
 
     this.renderBuffer = new RenderBuffer(canvas.width, canvas.height);
     this.simulation = new Simulation(canvas.width, canvas.height);
