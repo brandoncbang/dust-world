@@ -11,7 +11,7 @@ export class Game {
 
   private readonly ctx: CanvasRenderingContext2D;
 
-  private simulation: Simulation;
+  private readonly simulation: Simulation;
   private readonly renderBuffer: RenderBuffer;
 
   private lastMouseX: number = Input.mouseX;
